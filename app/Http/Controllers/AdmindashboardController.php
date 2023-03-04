@@ -13,18 +13,33 @@ class AdmindashboardController extends Controller
 {
 
 
-
+    
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
     public function show()
-{
-    $books = Book::all();
-    $students = User::where('isAdmin', '!=', true)->get();
-    return view('admindashboard', compact('books', 'students'));
-}
+    {
+        $books = Book::all();
+        $numberOfStu = User::count();
+        $numberOfBooks = Book::count();
+        $students = User::where('isAdmin', '!=', true)->get();
+        return view('admindashboard', compact('books', 'students', 'numberOfStu','numberOfBooks'),);
+    }
+
+
+    public function update(Request $request, $id)
+    {
+        $students = User::findOrFail($id);
+        $students->name = $request->input('name');
+        $students->email = $request->input('email');
+        $students->password = Hash::make($request->input('password'));
+        $students->save();
+        return redirect()->back()->with('success', 'Data updated successfully!');
+    }
+
+
     /**
      * Store a newly created resource in storage.
      *

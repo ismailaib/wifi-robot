@@ -28,8 +28,7 @@ Route::get('/', function () {
 
 /*  user auth  */ 
 Route::get('studentdashboard',[StudentDashboardController::class,'index'])->middleware(['auth','isStudent']);
-Route::get('bookplace',[BookplaceController::class,'index']);
-
+Route::get('bookplace',[BookplaceController::class,'book']);
 
 
 Route::get('login',[LoginController::class,'index'])->name('login');
@@ -51,6 +50,7 @@ Route::post('admindashboard',[AdminDashboardController::class,'add']);
 /*  admin delete student  */ 
 Route::get('delete/{id}',[AdminDashboardController::class,'delete']);
 /*  admin edit student  */ 
+Route::put('/update/{id}', [AdminDashboardController::class, 'update'])->name('update');
 
 
  

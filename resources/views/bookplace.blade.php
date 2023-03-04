@@ -63,7 +63,7 @@
     </div>
 
     <div class="image">
-      <img src="assets/img/book-5.jpg" alt="">
+      <img src="img/book-5.jpg" alt="">
     </div>
   </section>
   <div class="wrapper" id="wrapper">
@@ -92,26 +92,32 @@
     <div class="swiper featured-slider">
       <div class="swiper-wrapper">
         <!-- the cards here -->
+        @foreach($books as $book)
         <div class="swiper-slide box">
         <div class="icons">
           <a href="#" class="fas fa-heart" id="heart"></a>
           <a href="#" class="fas fa-eye" id="eye"></a>
         </div>
         <div class="image">
-          <img src=" item.Img " alt="">
+          <img src="{{ asset('img/' . $book->Img) }}" alt="">
         </div>
         <div class="content">
-          <h3> item.Name </h3>
-          <p> item.Info </p>
-          <h5> item.Type </h5>
-        <div class="Quantity"> item.Quantity </div>
+          <h3> {{ $book->Name }} </h3>
+          <p> {{ $book->Info }} </p>
+          <h5> {{ $book->Type }} </h5>
+        <div class="Quantity"> {{ $book->Quantity }} </div>
+        </div>
         <a href="#" class="btn" id="success">Command</a>
       </div>
-      </div>
+      @endforeach
     </div>
-  </section>
-  <script src="{{url('js/book_place.js')}}"></script>
-  <script src="{{url('js/student_dashboard.js')}}"></script>
-</body>
 
+  </section>
+  <script src="{{url('js/book-place.js')}}"></script>
+  <script src="{{url('js/student_dashboard.js')}}"></script>
+
+<script>
+
+</script>
+</body>
 </html>

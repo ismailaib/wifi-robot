@@ -21,13 +21,13 @@
       <div class="header-1">
         <a href="#" class="logo"> <i class="fas fa-book"></i> library </a>
         <form action="" class="search-form">
-          <input type="search" name="" placeholder="By ismail aib ..." id="search-box">
+          <input type="search" name="" placeholder="Searsh here" id="searchInput">
           <label for="search-box" class="fas fa-search"></label>
         </form>
         <div class="icons" id="header-icons">
           <div id="search-btn" class="fas fa-search"></div>
           <a href="#" class="fas fa-heart"></a>
-          <a href="student_dashboard.html" class="fas fa-table-columns"></a>
+          <a href="{{url('bookplace')}}" class="fas fa-table-columns"></a>
           <a href="{{url('logout')}}" class="fas fas fa-right-from-bracket"></a>
         </div>
       </div>
@@ -39,57 +39,82 @@
     </div>
     <div class="cards">
       <div class="card" id="students">
+        <div class="title">
         <a href="#" class="fas fa-users"></a>
-        <h3>Students</h3>
+          <h3>Students</h3>
+        </div>
+        <div class="counter">
+          <h3>{{ $numberOfStu - 1 }}</h3>
+        </div>
       </div>
       <div class="card" id="books">
-        <a href="#" class="fas fa-book"></a>
-        <h3>Books</h3>
+        <div class="title">
+          <a href="#" class="fas fa-book"></a>
+          <h3>Books</h3>
+        </div>
+        <div class="counter">
+          <h3>{{ $numberOfBooks }}</h3>
+        </div>
       </div>
       <div class="card" id="requests">
-        <a href="#" class="fas fa-list-check"></a>
-        <h3>Requests</h3>
+        <div class="title">
+          <a href="#" class="fas fa-list-check"></a>
+          <h3>Requests</h3>
+        </div>
+        <div class="counter">
+          <h3>0</h3>
+        </div>
+      </div>
+      <div class="card" id="statistiques">
+        <div class="title">
+          <a href="#" class="fas fa-chart-simple"></a>
+          <h3>statistiques</h3>
+        </div>
+        <div class="counter">
+          <h3>3</h3>
+        </div>
       </div>
     </div>
     <div class="text">
       <h2>choose frome the categories</h2>
     </div>
     <div class="students">
-      <a href="#" class="fas fa-student fa-plus" onclick="openForm()">
+      <a href="#" class="fas fa-student fa-plus" onclick="openadd()">
         <h2>Add Student</h2>
       </a>
-    <table>
-    <tr>
-      <th>Id</th>
-      <th>Name</th>
-      <th>Email</th>
-      <th>Created at</th>
-      <th>Updated at</th>
-      <th>Edit</th>
-      <th>Delete</th>
-    </tr>
-    @foreach($students as $student)
-    <tr>
-      <td>{{$student['id']}}</td>
-      <td>{{$student['name']}}</td>
-      <td>{{$student['email']}}</td>
-      <td>{{$student['created_at']}}</td>
-      <td>{{$student['updated_at']}}</td>
-      <td>
-        <a href="#" onclick="openUpdate()"><i class="fa-solid fa-pen-to-square"></i></a>
-      </td>
-      <td>
-        <a id="deletebtn" href={{"delete/".$student['id']}}><i class="fa-solid fa-trash"></i></a>
-      </td>
-    </tr>
-    @endforeach
-    </table>
+      <table id="studentsTable">
+  <tr>
+    <th>Id</th>
+    <th>Name</th>
+    <th>Email</th>
+    <th>Created at</th>
+    <th>Level</th>
+    <th>Edit</th>
+    <th>Delete</th>
+  </tr>
+  @foreach($students as $student)
+  <tr>
+    <td>{{$student['id']}}</td>
+    <td>{{$student['name']}}</td>
+    <td>{{$student['email']}}</td>
+    <td>{{$student['created_at']}}</td>
+    <td></td>
+    <td>
+      <a href="#{id}" onclick="openupdate()"><i class="fa-solid fa-pen-to-square"></i></a>
+    </td>
+    <td>
+      <a id="deletebtn" href={{"delete/".$student['id']}}><i class="fa-solid fa-trash"></i></a>
+    </td>
+  </tr>
+  @endforeach
+</table>
     </div>
-    <div class="form-popup" id="myForm">
+    <!-- add -->
+    <div class="form-popup" id="add">
       <form action="" class="form-container" method="post">
         <div class="title">
           <h2>Add Student</h2>
-          <a onclick="closeForm()" href=""><i class="fa-solid fa-xmark"></i></a>
+          <a onclick="closeadd()" href=""><i class="fa-solid fa-xmark"></i></a>
         </div>
         <div style="color:red;">
           @foreach($errors->all() as $error)
@@ -103,18 +128,30 @@
         <button type="submit" class="btn">Add</button>
       </form>
     </div>
-    <div class="update-popup" id="update">
-      <form action="" id="modification" mrthod="post">
+    <!-- update -->
+    <div class="form-popup" id="update">
+      <form action="{{ route('update', $student['id']) }}" class="form-container" method="post">
+        <div class="title">
+          <h2>Update Student</h2>
+          <a onclick="closeupdate()" href=""><i class="fa-solid fa-xmark"></i></a>
+        </div>
+        <div style="color:red;">
+          @foreach($errors->all() as $error)
+          {{$error}}<br>
+          @endforeach
+        </div>
         @csrf
-        <input type="text" class="field" id="name" name="name" placeholder="{{$student['name']}}" value="{{$student['name']}}" required>
-        <input type="email" class="field" id="email" name="email" placeholder="{{$student['email']}}" value="{{$student['email']}}">
-        <input type="password" class="field" id="password" name="password" placeholder="Change Your Your Password">
-        <button type="submit" class="btn">Change</button>
+        @method('PUT')
+        <input type="text" class="field" id="name" name="name" placeholder="Your Name Here">
+        <input type="email" class="field" id="email" name="email" placeholder="E-mail">
+        <input type="password" class="field" id="password" name="password" placeholder="Your Password">
+        <button type="submit" class="btn">Update</button>
       </form>
     </div>
     <div class="books">
     @if(isset($books))
     <table>
+  <thead>
     <tr>
       <th>id</th>
       <th>Name</th>
@@ -123,6 +160,8 @@
       <th>Info</th>
       <th>Type</th>
     </tr>
+  </thead>
+  <tbody id="book-table">
     @foreach($books as $book)
     <tr>
       <td>{{ $book->id }}</td>
@@ -133,7 +172,8 @@
       <td>{{ $book->Type }}</td>
     </tr>
     @endforeach
-    </table>
+  </tbody>
+</table>
     @endif
 
     </div>
@@ -202,7 +242,15 @@
     .books {
       padding-top: 2rem;
     }
-
+    .cards .card {
+    background: #807ef7;
+    border-radius: 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-right: 30px;
+}
   </style>
   <script>
 
@@ -220,8 +268,67 @@
         $(".students, .books, .text").hide();
       });
     });
-  </script>
 
+    function openadd() {
+    document.getElementById("add").style.display = "block";
+  }
+  
+  function closeadd() {
+    document.getElementById("add").style.display = "none";
+  }
+
+  function openupdate() {
+    document.getElementById("update").style.display = "block";
+  }
+  
+  function closeupdate() {
+    document.getElementById("update").style.display = "none";
+  }
+
+  </script>
+<script>
+  let searchInput = document.getElementById('searchInput');
+  let studentsTable = document.getElementById('studentsTable');
+
+searchInput.addEventListener('keyup', function() {
+  let filter = searchInput.value.toLowerCase();
+  let rows = studentsTable.getElementsByTagName('tr');
+
+  for (let i = 0; i < rows.length; i++) {
+    let name = rows[i].getElementsByTagName('td')[1];
+    let email = rows[i].getElementsByTagName('td')[2];
+
+    if (name || email) {
+      let nameValue = name.textContent || name.innerText;
+      let emailValue = email.textContent || email.innerText;
+
+      if (nameValue.toLowerCase().indexOf(filter) > -1 || emailValue.toLowerCase().indexOf(filter) > -1) {
+        rows[i].style.display = '';
+      } else {
+        rows[i].style.display = 'none';
+      }
+    }
+  }
+});
+</script>
+<script>
+document.getElementById('searchInput').addEventListener('input', function() {
+  let filter = this.value.toLowerCase();
+  let rows = document.getElementById('book-table').rows;
+
+  for (let i = 1; i < rows.length; i++) {
+    let nameValue = rows[i].cells[1].innerText.toLowerCase();
+    let quantityValue = rows[i].cells[2].innerText.toLowerCase();
+    let typeValue = rows[i].cells[5].innerText.toLowerCase();
+
+    if (nameValue.indexOf(filter) > -1 || quantityValue.indexOf(filter) > -1 || typeValue.indexOf(filter) > -1) {
+      rows[i].style.display = '';
+    } else {
+      rows[i].style.display = 'none';
+    }
+  }
+});
+</script>
 </body>
 
 </html>
