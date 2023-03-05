@@ -50,8 +50,7 @@ Route::post('admindashboard',[AdminDashboardController::class,'add']);
 /*  admin delete student  */ 
 Route::get('delete/{id}',[AdminDashboardController::class,'delete']);
 /*  admin edit student  */ 
-Route::put('/update/{id}', [AdminDashboardController::class, 'update'])->name('update');
-
-
+Route::get('/update/{id}', [AdmindashboardController::class, 'update'])->name('update');
+Route::put('/update/{id}', [AdmindashboardController::class, 'update'])->name('update');
  
 

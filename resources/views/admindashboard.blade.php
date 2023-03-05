@@ -100,7 +100,7 @@
     <td>{{$student['created_at']}}</td>
     <td></td>
     <td>
-      <a href="#{id}" onclick="openupdate()"><i class="fa-solid fa-pen-to-square"></i></a>
+      <a href="#" onclick="openupdate()"><i class="fa-solid fa-pen-to-square"></i></a>
     </td>
     <td>
       <a id="deletebtn" href={{"delete/".$student['id']}}><i class="fa-solid fa-trash"></i></a>
@@ -130,24 +130,26 @@
     </div>
     <!-- update -->
     <div class="form-popup" id="update">
-      <form action="{{ route('update', $student['id']) }}" class="form-container" method="post">
-        <div class="title">
-          <h2>Update Student</h2>
-          <a onclick="closeupdate()" href=""><i class="fa-solid fa-xmark"></i></a>
-        </div>
-        <div style="color:red;">
-          @foreach($errors->all() as $error)
-          {{$error}}<br>
-          @endforeach
-        </div>
-        @csrf
-        @method('PUT')
-        <input type="text" class="field" id="name" name="name" placeholder="Your Name Here">
-        <input type="email" class="field" id="email" name="email" placeholder="E-mail">
-        <input type="password" class="field" id="password" name="password" placeholder="Your Password">
-        <button type="submit" class="btn">Update</button>
-      </form>
+    <form action="{{ route('update', $student->id) }}" class="form-container" method="post">
+    <div class="title">
+      <h2>Update Student</h2>
+      <a onclick="closeupdate()" href="#"><i class="fa-solid fa-xmark"></i></a>
     </div>
+    <div style="color:red;">
+      @foreach($errors->all() as $error)
+        {{$error}}<br>
+      @endforeach
+    </div>
+    @csrf
+    <input type="hidden" name="_method" value="PUT">
+    <input type="" name="id" value="{{$student['id']}}">
+    <input type="text" class="field" id="name" name="name" value="{{$student['name']}}">
+    <input type="email" class="field" id="email" name="email" value="{{$student['email']}}">
+    <input type="password" class="field" id="password" name="password" placeholder="Your Password">
+    <button type="submit" class="btn">Update</button>
+  </form>
+</div>
+
     <div class="books">
     @if(isset($books))
     <table>

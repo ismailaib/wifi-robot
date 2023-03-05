@@ -29,16 +29,7 @@ class AdmindashboardController extends Controller
     }
 
 
-    public function update(Request $request, $id)
-    {
-        $students = User::findOrFail($id);
-        $students->name = $request->input('name');
-        $students->email = $request->input('email');
-        $students->password = Hash::make($request->input('password'));
-        $students->save();
-        return redirect()->back()->with('success', 'Data updated successfully!');
-    }
-
+    
 
     /**
      * Store a newly created resource in storage.
@@ -95,6 +86,29 @@ class AdmindashboardController extends Controller
         $data->delete();
         return redirect('admindashboard');
     }
+    public function edit($id)
+{
+    $student = User::findOrFail($id);
+    return view('edit', compact('student'));
+}
 
-    
+public function update(Request $request)
+{
+    $id = $request->input('id');
+    $student = User::findOrFail($id);
+    $validatedData = $request->validate([
+        'name' => 'required|string|max:255',
+        'email' => 'required|string|email|max:255|unique:users,email,'.$student->id,
+        'password' => 'nullable|string|min:8',
+    ]);
+    $student->name = $validatedData['name'];
+    $student->email = $validatedData['email'];
+    if ($request->has('password')) {
+        $student->password = Hash::make($validatedData['password']);
+    }
+    $student->save();
+    return redirect()->back()->with('success', 'Student updated successfully!');
+}
+
+
 }
